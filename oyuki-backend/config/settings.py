@@ -112,3 +112,5 @@ CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 
 EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="no-reply@oyuki.local")
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
