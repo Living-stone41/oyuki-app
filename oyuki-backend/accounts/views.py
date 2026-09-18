@@ -125,3 +125,20 @@ class ResetPasswordView(APIView):
         user.set_password(serializer.validated_data["new_password"])
         user.save()
         return success_response(message="Password reset successful.")
+
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdmin
+
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return success_response(data=UserSerializer(request.user).data)
+
+
+class AdminPingView(APIView):
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        return success_response(message="You are an authenticated ADMIN. Access granted.")
