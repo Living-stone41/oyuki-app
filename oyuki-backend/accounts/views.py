@@ -4,6 +4,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema
 from django.contrib.auth import get_user_model, authenticate
+from django.conf import settings
+from .utils import create_otp, verify_otp, send_otp_email
 
 from common.responses import success_response
 from .serializers import (
@@ -31,9 +33,14 @@ class RegisterView(APIView):
         user = serializer.save()
 
         code = create_otp(user, purpose="VERIFY_EMAIL")
-        # TODO (3d): send `code` via email instead of returning it
+        send_otp_email(user, code, "VERIFY_EMAIL")
+
+        data = {"user_id": user.id}
+        if settings.DEBUG:
+            data["debug_otp"] = code  # only visible in local dev, never in production
+
         return success_response(
-            data={"user_id": user.id, "debug_otp": code},
+            data=data,
             message="Registered. Verify your email with the OTP sent.",
             status_code=status.HTTP_201_CREATED,
         )
@@ -93,9 +100,9 @@ class ForgotPasswordView(APIView):
         user = User.objects.filter(email=serializer.validated_data["email"]).first()
         if user:
             code = create_otp(user, purpose="RESET_PASSWORD")
-            # TODO (3d): send `code` via email
-            return success_response(message="If that email exists, an OTP was sent.",
-                                     data={"debug_otp": code})
+            send_otp_email(user, code, "RESET_PASSWORD")
+            data = {"debug_otp": code} if settings.DEBUG else None
+            return success_response(message="If that email exists, an OTP was sent.", data=data)
         return success_response(message="If that email exists, an OTP was sent.")
 
 

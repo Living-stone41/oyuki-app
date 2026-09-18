@@ -2,7 +2,8 @@ import hashlib
 from django.utils import timezone
 from datetime import timedelta
 from .models import OTP
-
+from django.core.mail import send_mail
+from django.conf import settings
 
 def hash_code(code: str) -> str:
     return hashlib.sha256(code.encode()).hexdigest()
@@ -36,3 +37,13 @@ def verify_otp(user, code: str, purpose: str) -> tuple[bool, str]:
 
     otp.delete()
     return True, "OK"
+
+
+def send_otp_email(user, code: str, purpose: str):
+    subject_map = {
+        "VERIFY_EMAIL": "Verify your Oyuki account",
+        "RESET_PASSWORD": "Reset your Oyuki password",
+    }
+    subject = subject_map.get(purpose, "Your Oyuki verification code")
+    message = f"Your verification code is: {code}\nThis code expires in 10 minutes."
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
