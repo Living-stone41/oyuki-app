@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+import random
+from django.utils import timezone
+from datetime import timedelta
 
 class Role(models.TextChoices):
     CUSTOMER = "CUSTOMER", "Customer"
@@ -28,3 +30,19 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+
+
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otps")
+    code_hash = models.CharField(max_length=128)
+    purpose = models.CharField(max_length=32)  # e.g. "VERIFY_EMAIL", "RESET_PASSWORD"
+    attempts = models.PositiveSmallIntegerField(default=0)
+    expires_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    @staticmethod
+    def generate_code():
+        return f"{random.randint(0, 999999):06d}"
