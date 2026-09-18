@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     "payments",
     "notifications",
     "common",
+
+    "django_filters",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
