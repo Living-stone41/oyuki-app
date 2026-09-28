@@ -16,7 +16,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ["id", "order", "reference", "method", "amount", "status",
-                  "confirmed_at", "audit_log", "created_at"]
+                  "confirmed_at", "audit_log", "created_at","proof_of_payment"]
         read_only_fields = fields
 
 
@@ -28,3 +28,6 @@ class InitiatePaymentSerializer(serializers.Serializer):
 class ReviewPaymentSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=["CONFIRM", "FAIL"])
     note = serializers.CharField(required=False, allow_blank=True)
+
+class ProofOfPaymentUploadSerializer(serializers.Serializer):
+    proof = serializers.ImageField()

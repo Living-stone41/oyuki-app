@@ -86,3 +86,6 @@ class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
         fields = ["id", "product", "product_detail", "created_at"]
+
+class ProductImageUploadSerializer(serializers.Serializer):
+    image = serializers.ImageField()

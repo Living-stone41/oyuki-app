@@ -2,7 +2,13 @@ from django.shortcuts import render
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import ProductImage
+from .serializers import ProductImageUploadSerializer
+from drf_spectacular.utils import extend_schema
+from rest_framework.views import APIView
+from rest_framework import generics, filters
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from common.responses import success_response
 from .models import State, LGA, Market, Category, Product, Wishlist
 from .serializers import (
@@ -100,3 +106,33 @@ class WishlistDeleteView(generics.DestroyAPIView):
 
     def get_queryset(self):
         return Wishlist.objects.filter(customer=self.request.user)
+
+class ProductImageUploadView(APIView):
+    permission_classes = [IsSeller]
+    parser_classes = [MultiPartParser, FormParser]
+
+    @extend_schema(request=ProductImageUploadSerializer)
+    def post(self, request, pk):
+        product = Product.objects.filter(pk=pk, seller=request.user).first()
+        if not product:
+            return success_response(message="Product not found.", status_code=404)
+
+        serializer = ProductImageUploadSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        image = ProductImage.objects.create(product=product, image=serializer.validated_data["image"])
+        return success_response(
+            data={"id": image.id, "url": request.build_absolute_uri(image.image.url)},
+            status_code=201,
+        )
+
+
+class ProductImageDeleteView(APIView):
+    permission_classes = [IsSeller]
+
+    def delete(self, request, pk):
+        image = ProductImage.objects.filter(pk=pk, product__seller=request.user).first()
+        if not image:
+            return success_response(message="Image not found.", status_code=404)
+        image.delete()
+        return success_response(message="Image deleted.")

@@ -11,6 +11,8 @@ from accounts.permissions import IsAdmin, IsAccountOfficer
 from orders.models import Order, OrderStatus
 from .models import Payment, PaymentStatus, PaymentAuditLog
 from .serializers import PaymentSerializer, InitiatePaymentSerializer, ReviewPaymentSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from .serializers import ProofOfPaymentUploadSerializer
 
 
 class InitiatePaymentView(APIView):
@@ -100,4 +102,23 @@ class ReviewPaymentView(APIView):
                 changed_by=request.user, note=note or f"Marked {payment.status}.",
             )
 
+        return success_response(data=PaymentSerializer(payment).data)
+
+class UploadPaymentProofView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    @extend_schema(request=ProofOfPaymentUploadSerializer)
+    def post(self, request, pk):
+        payment = Payment.objects.filter(pk=pk, customer=request.user).first()
+        if not payment:
+            return success_response(message="Payment not found.", status_code=404)
+        if payment.status != PaymentStatus.PENDING:
+            return success_response(message=f"Payment already {payment.status}.", status_code=400)
+
+        serializer = ProofOfPaymentUploadSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        payment.proof_of_payment = serializer.validated_data["proof"]
+        payment.save(update_fields=["proof_of_payment"])
         return success_response(data=PaymentSerializer(payment).data)

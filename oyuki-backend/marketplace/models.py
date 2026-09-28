@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from common.models import TimeStampedModel
+from common.storage import product_image_path
+from common.validators import validate_image_file
+
 
 
 class State(models.Model):
@@ -64,8 +67,7 @@ class Product(TimeStampedModel):
 
 class ProductImage(TimeStampedModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to="products/")
-
+    image = models.ImageField(upload_to=product_image_path, validators=[validate_image_file])
 
 class Wishlist(TimeStampedModel):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="wishlist")

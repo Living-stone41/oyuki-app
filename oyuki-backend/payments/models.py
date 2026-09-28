@@ -3,6 +3,8 @@ from django.db import models
 from django.conf import settings
 from common.models import TimeStampedModel
 from orders.models import Order
+from common.storage import payment_proof_path
+from common.validators import validate_image_file
 
 
 def generate_reference():
@@ -23,11 +25,13 @@ class PaymentStatus(models.TextChoices):
 
 
 class Payment(TimeStampedModel):
+    
     order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="payments")
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="payments")
     reference = models.CharField(max_length=32, unique=True, default=generate_reference)
     method = models.CharField(max_length=20, choices=PaymentMethod.choices)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    proof_of_payment = models.ImageField(upload_to=payment_proof_path, validators=[validate_image_file], null=True, blank=True)
     status = models.CharField(max_length=12, choices=PaymentStatus.choices, default=PaymentStatus.PENDING)
     confirmed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                       null=True, blank=True, related_name="confirmed_payments")
@@ -35,6 +39,7 @@ class Payment(TimeStampedModel):
 
     def __str__(self):
         return f"{self.reference} ({self.status})"
+    
 
 
 class PaymentAuditLog(models.Model):

@@ -4,6 +4,7 @@ from .views import (
     ProductListView, ProductDetailView,
     MyProductListCreateView, MyProductDetailView,
     WishlistListCreateView, WishlistDeleteView,
+    ProductImageUploadView, ProductImageDeleteView,
 )
 
 urlpatterns = [
@@ -20,4 +21,7 @@ urlpatterns = [
 
     path("wishlist/", WishlistListCreateView.as_view(), name="wishlist"),
     path("wishlist/<int:pk>/", WishlistDeleteView.as_view(), name="wishlist-delete"),
+    
+    path("my-products/<int:pk>/images/", ProductImageUploadView.as_view(), name="product-image-upload"),
+    path("product-images/<int:pk>/", ProductImageDeleteView.as_view(), name="product-image-delete"),
 ]
