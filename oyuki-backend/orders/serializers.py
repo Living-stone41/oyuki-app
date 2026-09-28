@@ -34,3 +34,15 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CheckoutSerializer(serializers.Serializer):
     delivery_address = serializers.CharField()
+
+class SellerOrderActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=["ACCEPT", "REJECT"])
+    reject_reason = serializers.CharField(required=False, allow_blank=True)
+
+
+class AssignRiderSerializer(serializers.Serializer):
+    rider_id = serializers.IntegerField()
+
+
+class RiderStatusUpdateSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=["OUT_FOR_DELIVERY", "DELIVERED"])
