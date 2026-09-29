@@ -6,14 +6,16 @@ from drf_spectacular.utils import extend_schema
 from django.contrib.auth import get_user_model, authenticate
 from django.conf import settings
 from .utils import create_otp, verify_otp, send_otp_email
-
+from rest_framework.throttling import ScopedRateThrottle
 from common.responses import success_response
 from .serializers import (
     RegisterSerializer, UserSerializer, LoginSerializer,
-    VerifyOTPSerializer, ForgotPasswordSerializer, ResetPasswordSerializer,
+    VerifyOTPSerializer, ForgotPasswordSerializer, ResetPasswordSerializer,LogoutSerializer,
 )
 from .models import AccountStatus
 from .utils import create_otp, verify_otp
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 
 User = get_user_model()
 
@@ -25,7 +27,8 @@ def tokens_for_user(user):
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
-
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "otp"
     @extend_schema(request=RegisterSerializer)
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -48,6 +51,9 @@ class RegisterView(APIView):
 
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "otp"
+    
 
     @extend_schema(request=VerifyOTPSerializer)
     def post(self, request):
@@ -69,6 +75,8 @@ class VerifyOTPView(APIView):
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "login"
 
     @extend_schema(request=LoginSerializer)
     def post(self, request):
@@ -91,6 +99,8 @@ class LoginView(APIView):
 
 class ForgotPasswordView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "otp"
 
     @extend_schema(request=ForgotPasswordSerializer)
     def post(self, request):
@@ -142,3 +152,17 @@ class AdminPingView(APIView):
 
     def get(self, request):
         return success_response(message="You are an authenticated ADMIN. Access granted.")
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(request=LogoutSerializer)
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            token = RefreshToken(serializer.validated_data["refresh"])
+            token.blacklist()
+        except TokenError:
+            return success_response(message="Invalid or already-expired token.", status_code=400)
+        return success_response(message="Logged out.")

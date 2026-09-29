@@ -90,7 +90,8 @@ class MyOrdersView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Order.objects.filter(customer=self.request.user).order_by("-created_at")
+        return Order.objects.filter(customer=self.request.user).order_by("-created_at") \
+            .prefetch_related("items", "status_history", "payments")
 
 
 class MyOrderDetailView(generics.RetrieveAPIView):
@@ -106,7 +107,8 @@ class SellerOrdersView(generics.ListAPIView):
     permission_classes = [IsSeller]
 
     def get_queryset(self):
-        return Order.objects.filter(seller=self.request.user).order_by("-created_at")
+        return Order.objects.filter(customer=self.request.user).order_by("-created_at") \
+            .prefetch_related("items", "status_history", "payments")
 
 
 class SellerOrderActionView(APIView):
@@ -144,7 +146,9 @@ class SellerOrderActionView(APIView):
 class AdminOrdersView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAdmin]
-    queryset = Order.objects.all().order_by("-created_at")
+    def get_queryset(self):
+        return Order.objects.filter(customer=self.request.user).order_by("-created_at") \
+            .prefetch_related("items", "status_history", "payments")
 
 
 class AssignRiderView(APIView):

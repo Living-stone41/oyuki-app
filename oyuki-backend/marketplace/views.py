@@ -63,8 +63,7 @@ class ProductListView(generics.ListAPIView):
     search_fields = ["name", "description"]
 
     def get_queryset(self):
-        return Product.objects.filter(is_active=True).select_related("seller", "category")
-
+         return Product.objects.filter(is_active=True).select_related("seller", "category").prefetch_related("images")
 
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.filter(is_active=True)
