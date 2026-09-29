@@ -82,7 +82,11 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 class WishlistSerializer(serializers.ModelSerializer):
     product_detail = ProductListSerializer(source="product", read_only=True)
-
+    def validate_product(self, product):
+        request = self.context.get("request")
+        if request and Wishlist.objects.filter(customer=request.user, product=product).exists():
+            raise serializers.ValidationError("This product is already in your wishlist.")
+        return product
     class Meta:
         model = Wishlist
         fields = ["id", "product", "product_detail", "created_at"]

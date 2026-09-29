@@ -63,7 +63,8 @@ class ProductListView(generics.ListAPIView):
     search_fields = ["name", "description"]
 
     def get_queryset(self):
-         return Product.objects.filter(is_active=True).select_related("seller", "category").prefetch_related("images")
+                 return Product.objects.filter(is_active=True).select_related("seller", "category") \
+            .prefetch_related("images").order_by("-created_at")
 
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.filter(is_active=True)
@@ -94,7 +95,7 @@ class WishlistListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Wishlist.objects.filter(customer=self.request.user)
+        return Wishlist.objects.filter(customer=self.request.user).order_by("-created_at")
 
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
