@@ -1,6 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
 from decouple import config as env, Csv
+import sys
+TESTING = "test" in sys.argv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -106,11 +108,11 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {
+     "DEFAULT_THROTTLE_RATES": {
         "anon": "60/minute",
         "user": "120/minute",
-        "login": "10/minute",
-        "otp": "5/minute",
+        "login": "1000/minute" if TESTING else "10/minute",
+        "otp": "1000/minute" if TESTING else "5/minute",
     },
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "common.pagination.StandardResultsSetPagination",
