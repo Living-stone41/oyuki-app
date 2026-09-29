@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import State, LGA, Market, Category, Product, ProductImage, Wishlist
+from common.validators import validate_image_file
 
 
 class StateSerializer(serializers.ModelSerializer):
@@ -93,3 +94,6 @@ class WishlistSerializer(serializers.ModelSerializer):
 
 class ProductImageUploadSerializer(serializers.Serializer):
     image = serializers.ImageField()
+
+class ProductImageUploadSerializer(serializers.Serializer):
+    image = serializers.ImageField(validators=[validate_image_file])

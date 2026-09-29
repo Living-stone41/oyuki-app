@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Payment, PaymentAuditLog, PaymentMethod
+from common.validators import validate_image_file
 
 
 class PaymentAuditLogSerializer(serializers.ModelSerializer):
@@ -31,3 +32,6 @@ class ReviewPaymentSerializer(serializers.Serializer):
 
 class ProofOfPaymentUploadSerializer(serializers.Serializer):
     proof = serializers.ImageField()
+
+class ProofOfPaymentUploadSerializer(serializers.Serializer):
+    proof = serializers.ImageField(validators=[validate_image_file])
