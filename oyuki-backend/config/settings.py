@@ -114,6 +114,7 @@ REST_FRAMEWORK = {
         "login": "1000/minute" if TESTING else "10/minute",
         "otp": "1000/minute" if TESTING else "5/minute",
     },
+    "DEFAULT_RENDERER_CLASSES": ["common.renderers.EnvelopeJSONRenderer"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "common.pagination.StandardResultsSetPagination",
     "EXCEPTION_HANDLER": "common.exceptions.custom_exception_handler",
