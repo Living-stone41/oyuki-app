@@ -1,0 +1,2356 @@
+openapi: 3.0.3
+info:
+  title: Oyuki API
+  version: v1
+  description: Backend API for the Oyuki marketplace mobile app. All endpoints are
+    versioned under /api/v1/.
+paths:
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - ht
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/accounts/admin-ping/:
+    get:
+      operationId: v1_accounts_admin_ping_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/forgot-password/:
+    post:
+      operationId: v1_accounts_forgot_password_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ForgotPassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ForgotPassword'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/login/:
+    post:
+      operationId: v1_accounts_login_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/logout/:
+    post:
+      operationId: v1_accounts_logout_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Logout'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/me/:
+    get:
+      operationId: v1_accounts_me_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/register/:
+    post:
+      operationId: v1_accounts_register_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/reset-password/:
+    post:
+      operationId: v1_accounts_reset_password_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResetPassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResetPassword'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/verify-otp/:
+    post:
+      operationId: v1_accounts_verify_otp_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOTP'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyOTP'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyOTP'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/cart/:
+    get:
+      operationId: v1_cart_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/cart/add/:
+    post:
+      operationId: v1_cart_add_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/cart/items/{id}/:
+    put:
+      operationId: v1_cart_items_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCartItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateCartItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateCartItem'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/cart/items/{id}/remove/:
+    delete:
+      operationId: v1_cart_items_remove_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/marketplace/categories/:
+    get:
+      operationId: v1_marketplace_categories_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoryList'
+          description: ''
+  /api/v1/marketplace/lgas/:
+    get:
+      operationId: v1_marketplace_lgas_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLGAList'
+          description: ''
+  /api/v1/marketplace/markets/:
+    get:
+      operationId: v1_marketplace_markets_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMarketList'
+          description: ''
+  /api/v1/marketplace/my-products/:
+    get:
+      operationId: v1_marketplace_my_products_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductDetailList'
+          description: ''
+    post:
+      operationId: v1_marketplace_my_products_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreate'
+          description: ''
+  /api/v1/marketplace/my-products/{id}/:
+    get:
+      operationId: v1_marketplace_my_products_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    put:
+      operationId: v1_marketplace_my_products_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductDetail'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    patch:
+      operationId: v1_marketplace_my_products_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductDetail'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    delete:
+      operationId: v1_marketplace_my_products_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/marketplace/my-products/{id}/images/:
+    post:
+      operationId: v1_marketplace_my_products_images_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductImageUpload'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductImageUpload'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/marketplace/product-images/{id}/:
+    delete:
+      operationId: v1_marketplace_product_images_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/marketplace/products/:
+    get:
+      operationId: v1_marketplace_products_list
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - in: query
+        name: market
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: seller
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductListList'
+          description: ''
+  /api/v1/marketplace/products/{id}/:
+    get:
+      operationId: v1_marketplace_products_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+  /api/v1/marketplace/states/:
+    get:
+      operationId: v1_marketplace_states_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedStateList'
+          description: ''
+  /api/v1/marketplace/wishlist/:
+    get:
+      operationId: v1_marketplace_wishlist_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWishlistList'
+          description: ''
+    post:
+      operationId: v1_marketplace_wishlist_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Wishlist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Wishlist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Wishlist'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wishlist'
+          description: ''
+  /api/v1/marketplace/wishlist/{id}/:
+    delete:
+      operationId: v1_marketplace_wishlist_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/notifications/:
+    get:
+      operationId: v1_notifications_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotificationList'
+          description: ''
+  /api/v1/notifications/{id}/read/:
+    patch:
+      operationId: v1_notifications_read_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/notifications/devices/:
+    post:
+      operationId: v1_notifications_devices_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDevice'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterDevice'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterDevice'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/notifications/devices/remove/:
+    post:
+      operationId: v1_notifications_devices_remove_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveDevice'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RemoveDevice'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RemoveDevice'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/notifications/read-all/:
+    post:
+      operationId: v1_notifications_read_all_create
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/notifications/unread-count/:
+    get:
+      operationId: v1_notifications_unread_count_retrieve
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/admin-orders/:
+    get:
+      operationId: v1_orders_admin_orders_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderList'
+          description: ''
+  /api/v1/orders/admin-orders/{id}/assign-rider/:
+    post:
+      operationId: v1_orders_admin_orders_assign_rider_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignRider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignRider'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/checkout/:
+    post:
+      operationId: v1_orders_checkout_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Checkout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Checkout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Checkout'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/my-orders/:
+    get:
+      operationId: v1_orders_my_orders_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderList'
+          description: ''
+  /api/v1/orders/my-orders/{id}/:
+    get:
+      operationId: v1_orders_my_orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+  /api/v1/orders/rider-orders/:
+    get:
+      operationId: v1_orders_rider_orders_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderList'
+          description: ''
+  /api/v1/orders/rider-orders/{id}/update-status/:
+    post:
+      operationId: v1_orders_rider_orders_update_status_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiderStatusUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RiderStatusUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RiderStatusUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/orders/seller-orders/:
+    get:
+      operationId: v1_orders_seller_orders_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderList'
+          description: ''
+  /api/v1/orders/seller-orders/{id}/action/:
+    post:
+      operationId: v1_orders_seller_orders_action_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerOrderAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SellerOrderAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SellerOrderAction'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/{id}/upload-proof/:
+    post:
+      operationId: v1_payments_upload_proof_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProofOfPaymentUpload'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProofOfPaymentUpload'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/admin-payments/:
+    get:
+      operationId: v1_payments_admin_payments_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPaymentList'
+          description: ''
+  /api/v1/payments/admin-payments/{id}/review/:
+    post:
+      operationId: v1_payments_admin_payments_review_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewPayment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewPayment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewPayment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/initiate/:
+    post:
+      operationId: v1_payments_initiate_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiatePayment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InitiatePayment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InitiatePayment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/my-payments/:
+    get:
+      operationId: v1_payments_my_payments_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPaymentList'
+          description: ''
+components:
+  schemas:
+    AddToCart:
+      type: object
+      properties:
+        product_id:
+          type: integer
+        quantity:
+          type: integer
+          minimum: 1
+      required:
+      - product_id
+      - quantity
+    AssignRider:
+      type: object
+      properties:
+        rider_id:
+          type: integer
+      required:
+      - rider_id
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+      required:
+      - id
+      - name
+    Checkout:
+      type: object
+      properties:
+        delivery_address:
+          type: string
+      required:
+      - delivery_address
+    ForgotPassword:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    InitiatePayment:
+      type: object
+      properties:
+        order_id:
+          type: integer
+        method:
+          $ref: '#/components/schemas/MethodEnum'
+      required:
+      - method
+      - order_id
+    LGA:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        state:
+          type: integer
+      required:
+      - id
+      - name
+      - state
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    Logout:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
+    Market:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        lga:
+          type: integer
+      required:
+      - id
+      - lga
+      - name
+    MethodEnum:
+      enum:
+      - BANK_TRANSFER
+      type: string
+      description: '* `BANK_TRANSFER` - Bank Transfer'
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        notification_type:
+          allOf:
+          - $ref: '#/components/schemas/NotificationTypeEnum'
+          readOnly: true
+        title:
+          type: string
+          readOnly: true
+        message:
+          type: string
+          readOnly: true
+        related_entity_type:
+          type: string
+          readOnly: true
+        related_entity_id:
+          type: integer
+          readOnly: true
+          nullable: true
+        is_read:
+          type: boolean
+          readOnly: true
+        read_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - is_read
+      - message
+      - notification_type
+      - read_at
+      - related_entity_id
+      - related_entity_type
+      - title
+    NotificationTypeEnum:
+      enum:
+      - ORDER
+      - PAYMENT
+      - GENERAL
+      type: string
+      description: |-
+        * `ORDER` - Order
+        * `PAYMENT` - Payment
+        * `GENERAL` - General
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer:
+          type: integer
+          readOnly: true
+        customer_name:
+          type: string
+          readOnly: true
+        seller:
+          type: integer
+          readOnly: true
+        seller_name:
+          type: string
+          readOnly: true
+        rider:
+          type: integer
+          nullable: true
+        rider_name:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status4bcEnum'
+        delivery_address:
+          type: string
+        delivery_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        payment_status:
+          type: string
+          readOnly: true
+        reject_reason:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+        status_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderStatusHistory'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - customer
+      - customer_name
+      - delivery_address
+      - id
+      - items
+      - payment_status
+      - rider_name
+      - seller
+      - seller_name
+      - status_history
+      - subtotal
+      - total
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: integer
+        product_name:
+          type: string
+          maxLength: 150
+        unit_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        quantity:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        line_total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - id
+      - line_total
+      - product
+      - product_name
+      - quantity
+      - unit_price
+    OrderStatusHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/Status4bcEnum'
+        changed_by_name:
+          type: string
+          readOnly: true
+        note:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - changed_by_name
+      - created_at
+      - id
+      - status
+    PaginatedCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    PaginatedLGAList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LGA'
+    PaginatedMarketList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Market'
+    PaginatedNotificationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+    PaginatedOrderList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+    PaginatedPaymentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+    PaginatedProductDetailList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDetail'
+    PaginatedProductListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductList'
+    PaginatedStateList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/State'
+    PaginatedWishlistList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Wishlist'
+    PatchedProductDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        quantity_available:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        seller:
+          type: integer
+          readOnly: true
+        seller_name:
+          type: string
+          readOnly: true
+        category:
+          type: integer
+        category_name:
+          type: string
+          readOnly: true
+        market:
+          type: integer
+        market_name:
+          type: string
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+          readOnly: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Payment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        order:
+          type: integer
+          readOnly: true
+        reference:
+          type: string
+          readOnly: true
+        method:
+          allOf:
+          - $ref: '#/components/schemas/MethodEnum'
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/PaymentStatusEnum'
+          readOnly: true
+        confirmed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        audit_log:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentAuditLog'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        proof_of_payment:
+          type: string
+          format: uri
+          nullable: true
+          readOnly: true
+      required:
+      - amount
+      - audit_log
+      - confirmed_at
+      - created_at
+      - id
+      - method
+      - order
+      - proof_of_payment
+      - reference
+      - status
+    PaymentAuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        from_status:
+          type: string
+          maxLength: 12
+        to_status:
+          type: string
+          maxLength: 12
+        changed_by_name:
+          type: string
+          readOnly: true
+        note:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - changed_by_name
+      - created_at
+      - id
+      - to_status
+    PaymentStatusEnum:
+      enum:
+      - PENDING
+      - CONFIRMED
+      - FAILED
+      - CANCELLED
+      - REFUNDED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `CONFIRMED` - Confirmed
+        * `FAILED` - Failed
+        * `CANCELLED` - Cancelled
+        * `REFUNDED` - Refunded
+    PlatformEnum:
+      enum:
+      - ANDROID
+      - IOS
+      type: string
+      description: |-
+        * `ANDROID` - Android
+        * `IOS` - iOS
+    ProductCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        quantity_available:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        category:
+          type: integer
+        market:
+          type: integer
+      required:
+      - category
+      - id
+      - market
+      - name
+      - price
+      - unit
+    ProductDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        quantity_available:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        seller:
+          type: integer
+          readOnly: true
+        seller_name:
+          type: string
+          readOnly: true
+        category:
+          type: integer
+        category_name:
+          type: string
+          readOnly: true
+        market:
+          type: integer
+        market_name:
+          type: string
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+          readOnly: true
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - category
+      - category_name
+      - created_at
+      - id
+      - images
+      - market
+      - market_name
+      - name
+      - price
+      - seller
+      - seller_name
+      - unit
+    ProductImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+      required:
+      - id
+      - image
+    ProductImageUpload:
+      type: object
+      properties:
+        image:
+          type: string
+          format: uri
+      required:
+      - image
+    ProductList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        unit:
+          $ref: '#/components/schemas/UnitEnum'
+        quantity_available:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        seller_name:
+          type: string
+          readOnly: true
+        category_name:
+          type: string
+          readOnly: true
+        thumbnail:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+      required:
+      - category_name
+      - id
+      - name
+      - price
+      - seller_name
+      - thumbnail
+      - unit
+    ProofOfPaymentUpload:
+      type: object
+      properties:
+        proof:
+          type: string
+          format: uri
+      required:
+      - proof
+    Register:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          title: Email address
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        phone:
+          type: string
+          nullable: true
+          maxLength: 20
+        password:
+          type: string
+          writeOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+      required:
+      - id
+      - password
+      - role
+      - username
+    RegisterDevice:
+      type: object
+      properties:
+        token:
+          type: string
+          maxLength: 255
+        platform:
+          $ref: '#/components/schemas/PlatformEnum'
+      required:
+      - platform
+      - token
+    RemoveDevice:
+      type: object
+      properties:
+        token:
+          type: string
+          maxLength: 255
+      required:
+      - token
+    ResetPassword:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        code:
+          type: string
+          maxLength: 6
+        new_password:
+          type: string
+          writeOnly: true
+      required:
+      - code
+      - email
+      - new_password
+    ReviewPayment:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/ReviewPaymentActionEnum'
+        note:
+          type: string
+      required:
+      - action
+    ReviewPaymentActionEnum:
+      enum:
+      - CONFIRM
+      - FAIL
+      type: string
+      description: |-
+        * `CONFIRM` - CONFIRM
+        * `FAIL` - FAIL
+    RiderStatusUpdate:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/RiderStatusUpdateStatusEnum'
+      required:
+      - status
+    RiderStatusUpdateStatusEnum:
+      enum:
+      - OUT_FOR_DELIVERY
+      - DELIVERED
+      type: string
+      description: |-
+        * `OUT_FOR_DELIVERY` - OUT_FOR_DELIVERY
+        * `DELIVERED` - DELIVERED
+    RoleEnum:
+      enum:
+      - CUSTOMER
+      - SELLER
+      - ADMIN
+      - ACCOUNT_OFFICER
+      - LOGISTICS_ADMIN
+      - RIDER
+      - MARKET_AGENT
+      - MARKET_SUPERVISOR
+      - MARKETER
+      type: string
+      description: |-
+        * `CUSTOMER` - Customer
+        * `SELLER` - Seller/Farmer
+        * `ADMIN` - Admin
+        * `ACCOUNT_OFFICER` - Account Officer
+        * `LOGISTICS_ADMIN` - Logistics Admin
+        * `RIDER` - Rider
+        * `MARKET_AGENT` - Market Agent
+        * `MARKET_SUPERVISOR` - Market Supervisor
+        * `MARKETER` - Marketer
+    SellerOrderAction:
+      type: object
+      properties:
+        action:
+          $ref: '#/components/schemas/SellerOrderActionActionEnum'
+        reject_reason:
+          type: string
+      required:
+      - action
+    SellerOrderActionActionEnum:
+      enum:
+      - ACCEPT
+      - REJECT
+      type: string
+      description: |-
+        * `ACCEPT` - ACCEPT
+        * `REJECT` - REJECT
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+      required:
+      - id
+      - name
+    Status4bcEnum:
+      enum:
+      - PENDING
+      - ACCEPTED
+      - REJECTED
+      - ASSIGNED
+      - OUT_FOR_DELIVERY
+      - DELIVERED
+      - CANCELLED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `ACCEPTED` - Accepted by Seller
+        * `REJECTED` - Rejected by Seller
+        * `ASSIGNED` - Assigned to Rider
+        * `OUT_FOR_DELIVERY` - Out for Delivery
+        * `DELIVERED` - Delivered
+        * `CANCELLED` - Cancelled
+    UnitEnum:
+      enum:
+      - KG
+      - CUP
+      - PIECE
+      - BAG
+      type: string
+      description: |-
+        * `KG` - Kilogram
+        * `CUP` - Cup
+        * `PIECE` - Piece
+        * `BAG` - Bag
+    UpdateCartItem:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+      required:
+      - quantity
+    VerifyOTP:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        code:
+          type: string
+          maxLength: 6
+      required:
+      - code
+      - user_id
+    Wishlist:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product:
+          type: integer
+        product_detail:
+          allOf:
+          - $ref: '#/components/schemas/ProductList'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - product
+      - product_detail
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

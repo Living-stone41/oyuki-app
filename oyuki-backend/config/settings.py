@@ -128,9 +128,9 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Oyuki API",
+    "DESCRIPTION": "Backend API for the Oyuki marketplace mobile app. All endpoints are versioned under /api/v1/.",
     "VERSION": "v1",
 }
-
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 
 EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
