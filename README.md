@@ -1,17 +1,42 @@
-# oyuki
+# Oyuki
 
-A new Flutter project.
+This repository contains the Flutter application source code for the Oyuki app.
 
-## Getting Started
+## Project structure
 
-This project is a starting point for a Flutter application.
+- Root project folder: `oyuki/`
+- Flutter app folder: `oyuki_app/`
+- Main app file: `oyuki_app/lib/main.dart`
+- App screens: `oyuki_app/lib/screens/`
+- Theme and shared config: `oyuki_app/lib/theme.dart`
 
-A few resources to get you started if this is your first Flutter project:
+## How to access the files
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+1. Open the project folder in VS Code.
+2. In the Explorer, open the folder named `oyuki_app`.
+3. Navigate to:
+   - `lib/main.dart` for the app entry point
+   - `lib/screens/` for screen files
+   - `lib/theme.dart` for theme settings
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+You can also open the exact file directly from the editor using:
+
+- `oyuki_app/lib/main.dart`
+
+## How to run the app
+
+Make sure Flutter is installed on your machine, then run:
+
+```bash
+cd oyuki_app
+flutter pub get
+flutter run
+```
+
+If you are using VS Code, you can also select a device/emulator and press F5 to run the app.
+
+## GitHub repository
+
+This project is connected to:
+
+https://github.com/Living-stone41/oyuki-app.git
