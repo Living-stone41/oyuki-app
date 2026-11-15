@@ -1,31 +1,21 @@
 # Oyuki
 
-This repository contains the Flutter application source code for the Oyuki app.
+This repository contains two separate Flutter applications for the Oyuki marketplace:
+
+- Buyer app: `oyuki_app/`
+- Vendor app: `oyuki_vendor/`
 
 ## Project structure
 
 - Root project folder: `oyuki/`
-- Flutter app folder: `oyuki_app/`
-- Main app file: `oyuki_app/lib/main.dart`
-- App screens: `oyuki_app/lib/screens/`
-- Theme and shared config: `oyuki_app/lib/theme.dart`
+- Buyer app folder: `oyuki_app/`
+- Vendor app folder: `oyuki_vendor/`
+- Buyer app entry point: `oyuki_app/lib/main.dart`
+- Vendor app entry point: `oyuki_vendor/lib/main.dart`
 
-## How to access the files
+## How to run each app
 
-1. Open the project folder in VS Code.
-2. In the Explorer, open the folder named `oyuki_app`.
-3. Navigate to:
-   - `lib/main.dart` for the app entry point
-   - `lib/screens/` for screen files
-   - `lib/theme.dart` for theme settings
-
-You can also open the exact file directly from the editor using:
-
-- `oyuki_app/lib/main.dart`
-
-## How to run the app
-
-Make sure Flutter is installed on your machine, then run:
+Buyer app:
 
 ```bash
 cd oyuki_app
@@ -33,10 +23,14 @@ flutter pub get
 flutter run
 ```
 
-If you are using VS Code, you can also select a device/emulator and press F5 to run the app.
+Vendor app:
 
-## GitHub repository
+```bash
+cd oyuki_vendor
+flutter pub get
+flutter run
+```
 
-This project is connected to:
+## Notes
 
-https://github.com/Living-stone41/oyuki-app.git
+The buyer app is the customer-facing marketplace, while the vendor app is the seller/admin side for managing store operations.

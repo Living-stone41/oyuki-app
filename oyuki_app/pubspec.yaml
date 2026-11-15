@@ -36,6 +36,8 @@ dependencies:
   qr_flutter: ^4.1.0
   geolocator: ^13.0.2
   http: ^1.2.2
+  oyuki_vendor:
+    path: ../oyuki_vendor
 
 dev_dependencies:
   flutter_test:
@@ -91,4 +93,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-   
+

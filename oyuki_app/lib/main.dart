@@ -6,7 +6,7 @@ import 'screens/category_screen.dart';
 import 'screens/store_page.dart';
 import 'screens/product_page.dart';
 import 'screens/search_screens.dart';
-import 'screens/cart_screen.dart';
+import 'screens/cart_screen.dart';  
 import 'screens/tracking_screens.dart';
 import 'screens/profile_screens.dart';
 import 'screens/wallet_screen.dart';
@@ -28,8 +28,9 @@ class OyukiApp extends StatelessWidget {
           textTheme: GoogleFonts.poppinsTextTheme(),
           primaryColor: AppColors.green,
         ),
-        initialRoute: '/splash',
+        initialRoute: '/role-picker',
         routes: {
+          '/role-picker': (_) => const RolePickerScreen(),
           '/splash': (_) => const SplashScreen(),
           '/get-started': (_) => const GetStartedScreen(),
           '/signup': (_) => const SignUpScreen(),

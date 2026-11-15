@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:oyuki_vendor/screens/login_screen.dart' as vendor_login;
+import 'package:oyuki_vendor/screens/shell.dart' as vendor_shell;
+import 'package:oyuki_vendor/state/app_scope.dart' as vendor_scope;
+import 'package:oyuki_vendor/state/app_state.dart' as vendor_state;
+import 'package:oyuki_vendor/theme.dart' as vendor_theme;
 import '../theme.dart';
 import '../user_session.dart';
 import '../widgets/common.dart';
@@ -34,6 +39,65 @@ class _AuthScaffold extends StatelessWidget {
           ),
         ),
       );
+}
+
+class _VendorAuthGate extends StatelessWidget {
+  const _VendorAuthGate();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = vendor_scope.AppScope.of(context);
+    return state.loggedIn ? const vendor_shell.Shell() : const vendor_login.LoginScreen();
+  }
+}
+
+class VendorRouteScreen extends StatefulWidget {
+  const VendorRouteScreen({super.key});
+
+  @override
+  State<VendorRouteScreen> createState() => _VendorRouteScreenState();
+}
+
+class _VendorRouteScreenState extends State<VendorRouteScreen> {
+  late final Future<vendor_state.AppState> _vendorState;
+
+  @override
+  void initState() {
+    super.initState();
+    _vendorState = vendor_state.AppState.load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<vendor_state.AppState>(
+      future: _vendorState,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final state = snapshot.data!;
+        return vendor_scope.AppScope(
+          state: state,
+          child: MaterialApp(
+            title: 'Oyuki Vendor',
+            debugShowCheckedModeBanner: false,
+            theme: vendor_theme.buildTheme(),
+            home: const _VendorAuthGate(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+void _openVendorSide(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => const VendorRouteScreen()),
+  );
 }
 
 class SignUpScreen extends StatefulWidget {
@@ -95,6 +159,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           const SizedBox(height: 16),
           const AppTextField(label: 'REFERRAL CODE', hint: 'rey735#'),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () => _openVendorSide(context),
+            child: Text(
+              'Want to sell on Oyuki? Click here',
+              style: poppins(size: 14, weight: FontWeight.w600, color: AppColors.green),
+            ),
+          ),
           const SizedBox(height: 28),
           PrimaryButton(
             text: 'Sign Up',
@@ -219,6 +291,14 @@ class _LoginScreenState extends State<LoginScreen> {
           GestureDetector(
             onTap: () => Navigator.pushNamed(context, '/forgot'),
             child: Text('Forgot password', style: poppins(size: 13, weight: FontWeight.w600, color: AppColors.green)),
+          ),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => _openVendorSide(context),
+            child: Text(
+              'Want to sell on Oyuki? Click here',
+              style: poppins(size: 14, weight: FontWeight.w600, color: AppColors.green),
+            ),
           ),
           const SizedBox(height: 28),
           PrimaryButton(text: 'Log In', onTap: _login),
@@ -387,4 +467,55 @@ class _OtpSignUpScreenState extends State<OtpSignUpScreen> {
           PrimaryButton(text: 'Verify and continue', onTap: _verify),
         ],
       );
+}
+
+class RolePickerScreen extends StatelessWidget {
+  const RolePickerScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _AuthScaffold(
+      children: [
+        Text(
+          'Continue as',
+          style: poppins(size: 26, weight: FontWeight.w700, color: AppColors.text),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Choose the side you want to access',
+          style: poppins(size: 14, color: AppColors.grey),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 28),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.green,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('Buyer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          ),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () => _openVendorSide(context),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.green,
+              side: const BorderSide(color: AppColors.green),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('Seller', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          ),
+        ),
+      ],
+    );
+  }
 }

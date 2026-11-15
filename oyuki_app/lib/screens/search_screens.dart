@@ -31,6 +31,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   static const recent = ['Chicken', 'Pasta', 'Spinach', 'Fresh eggs', 'Fried rice', 'Afang soup', 'Catfish'];
 
+  void _tapRecent(String value) => _submitSearch(value);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
@@ -70,13 +72,16 @@ class _SearchScreenState extends State<SearchScreen> {
                 runSpacing: 10,
                 children: [
                   for (final r in recent)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.green, width: 1.2),
-                        borderRadius: BorderRadius.circular(20),
+                    GestureDetector(
+                      onTap: () => _tapRecent(r),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.green, width: 1.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(r, style: poppins(size: 13, color: AppColors.text)),
                       ),
-                      child: Text(r, style: poppins(size: 13, color: AppColors.text)),
                     ),
                 ],
               ),
