@@ -68,70 +68,75 @@ class GetStartedScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(28, 28, 28, 36),
-          child: Column(
-            children: [
-              const Spacer(),
-              const CircleAvatar(
-                radius: 48,
-                backgroundColor: AppColors.navActive,
-                child: Icon(
-                  Icons.shopping_basket_outlined,
-                  color: AppColors.green,
-                  size: 48,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.sizeOf(context).height - 64,
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 48),
+                const CircleAvatar(
+                  radius: 48,
+                  backgroundColor: AppColors.navActive,
+                  child: Icon(
+                    Icons.shopping_basket_outlined,
+                    color: AppColors.green,
+                    size: 48,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'Fresh goods, delivered to you',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  height: 1.15,
+                const SizedBox(height: 28),
+                const Text(
+                  'Fresh goods, delivered to you',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    height: 1.15,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Shop fresh kitchen foods and farm produce from trusted sellers on Oyuki.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.grey,
-                  fontSize: 15,
-                  height: 1.5,
+                const SizedBox(height: 12),
+                const Text(
+                  'Shop fresh kitchen foods and farm produce from trusted sellers on Oyuki.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.grey,
+                    fontSize: 15,
+                    height: 1.5,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, '/login'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.green,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 48),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/login'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.green,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Get started',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),
+                ),
+                const SizedBox(height: 14),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, '/signup'),
                   child: const Text(
-                    'Get started',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    'Create an account',
+                    style: TextStyle(color: AppColors.green),
                   ),
                 ),
-              ),
-              const SizedBox(height: 14),
-              TextButton(
-                onPressed: () =>
-                    Navigator.pushReplacementNamed(context, '/signup'),
-                child: const Text(
-                  'Create an account',
-                  style: TextStyle(color: AppColors.green),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

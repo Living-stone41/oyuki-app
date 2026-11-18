@@ -36,37 +36,31 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   // Long-press the bell to simulate an incoming customer order.
-                  GestureDetector(
-                    onLongPress: () async {
-                      await s.simulateIncomingOrder();
-                      if (context.mounted) toast(context, 'New order received');
-                    },
-                    child: IconButton(
-                      tooltip: 'Notifications',
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const NotificationsScreen()),
-                      ),
-                      icon: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          const Icon(Icons.notifications_none,
-                              color: AppColors.primary, size: 28),
-                          if (s.unreadCount > 0)
-                            Positioned(
-                              right: 1,
-                              top: 1,
-                              child: Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: AppColors.danger,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 1.5),
-                                ),
+                  IconButton(
+                    tooltip: 'Notifications',
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+                    ),
+                    icon: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        const Icon(Icons.notifications_none,
+                            color: AppColors.primary, size: 28),
+                        if (s.unreadCount > 0)
+                          Positioned(
+                            right: 1,
+                            top: 1,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: AppColors.danger,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
                               ),
                             ),
-                        ],
-                      ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

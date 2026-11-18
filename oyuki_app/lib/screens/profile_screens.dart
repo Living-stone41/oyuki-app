@@ -6,6 +6,7 @@ import 'faq_screen.dart';
 import 'referral_screen.dart';
 import 'support_screen.dart';
 import 'twofa_setup_screen.dart';
+import '../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,7 +24,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       confirmLabel: 'Sign out',
     );
     if (confirmed && context.mounted) {
-      UserSession.clear();
+      await AuthService.logout();
+      if (!context.mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
     }
   }

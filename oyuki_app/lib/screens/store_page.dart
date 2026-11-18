@@ -40,29 +40,40 @@ class StorePage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text('James and Co. Farmhouse',
-                            style: poppins(size: 18, weight: FontWeight.w700, color: AppColors.text)),
+                        Expanded(
+                          child: Text('James and Co. Farmhouse',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: poppins(size: 18, weight: FontWeight.w700, color: AppColors.text)),
+                        ),
                         const SizedBox(width: 6),
                         const VerifiedBadge(),
-                        const Spacer(),
+                        const SizedBox(width: 8),
                         const Icon(Icons.favorite_border, size: 22),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Row(
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 10,
+                      runSpacing: 8,
                       children: [
-                        const Icon(Icons.star, color: AppColors.gold, size: 16),
-                        const SizedBox(width: 4),
-                        Text('4.5/5 ', style: poppins(size: 13, weight: FontWeight.w600, color: AppColors.text)),
-                        Text('(120)', style: poppins(size: 13, color: AppColors.grey)),
-                        const SizedBox(width: 12),
-                        const Icon(Icons.schedule, size: 15, color: AppColors.grey),
-                        const SizedBox(width: 4),
-                        Text('9am - 12am', style: poppins(size: 13, color: AppColors.grey)),
-                        const SizedBox(width: 12),
-                        const Icon(Icons.electric_bolt, size: 15, color: AppColors.grey),
-                        const SizedBox(width: 4),
-                        Text('19 - 24 min', style: poppins(size: 13, color: AppColors.grey)),
+                        Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.star, color: AppColors.gold, size: 16),
+                          const SizedBox(width: 4),
+                          Text('4.5/5 ', style: poppins(size: 13, weight: FontWeight.w600, color: AppColors.text)),
+                          Text('(120)', style: poppins(size: 13, color: AppColors.grey)),
+                        ]),
+                        Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.schedule, size: 15, color: AppColors.grey),
+                          const SizedBox(width: 4),
+                          Text('9am - 12am', style: poppins(size: 13, color: AppColors.grey)),
+                        ]),
+                        Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.electric_bolt, size: 15, color: AppColors.grey),
+                          const SizedBox(width: 4),
+                          Text('19 - 24 min', style: poppins(size: 13, color: AppColors.grey)),
+                        ]),
                       ],
                     ),
                     const SizedBox(height: 16),

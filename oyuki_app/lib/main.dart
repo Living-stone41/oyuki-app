@@ -14,8 +14,13 @@ import 'screens/address_screen.dart';
 import 'screens/cards_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'theme.dart';
+import 'services/auth_service.dart';
 
-void main() => runApp(const OyukiApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AuthService.restoreSession();
+  runApp(const OyukiApp());
+}
 
 class OyukiApp extends StatelessWidget {
   const OyukiApp({super.key});
@@ -28,6 +33,17 @@ class OyukiApp extends StatelessWidget {
           textTheme: GoogleFonts.poppinsTextTheme(),
           primaryColor: AppColors.green,
         ),
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+          return MediaQuery(
+            data: mediaQuery.copyWith(
+              textScaler: TextScaler.linear(
+                mediaQuery.textScaler.scale(1.0).clamp(0.85, 1.15),
+              ),
+            ),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         initialRoute: '/role-picker',
         routes: {
           '/role-picker': (_) => const RolePickerScreen(),

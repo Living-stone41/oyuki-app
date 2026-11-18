@@ -61,7 +61,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   scrollDirection: Axis.horizontal,
                   itemCount: cats.length,
                   separatorBuilder: (_, _) => const SizedBox(width: 12),
-                  itemBuilder: (_, i) => CategoryTile(bg: cats[i].$1, icon: cats[i].$2, iconColor: cats[i].$3, label: cats[i].$4, size: 58),
+                  itemBuilder: (_, i) => CategoryTile(
+                    bg: cats[i].$1,
+                    icon: cats[i].$2,
+                    iconColor: cats[i].$3,
+                    label: cats[i].$4,
+                    size: 58,
+                    onTap: () => _submitSearch(cats[i].$4),
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
@@ -96,13 +103,45 @@ class SearchResultScreen extends StatelessWidget {
   const SearchResultScreen({super.key, this.query = 'Chicken'});
 
   static const products = [
-    ('p1.png', 'Fresh Full Chicken', 'Johns Farmhouse', '₦7,000', '₦3,000'),
-    ('p2.png', 'Chicken Breast', 'Poultry Farm', '₦8,450', '₦2,000'),
-    ('p3.png', 'Fresh Tomatoes', 'Green Valley Farm', '₦4,500', '₦1,900'),
-    ('p4.png', 'Fresh Eggs', 'Local Farm', '₦6,500', '₦1,500'),
-    ('p5.png', 'Fresh Vegetables', 'Harvest Market', '₦3,500', '₦1,000'),
-    ('p6.png', 'Fresh Peppers', 'Farm Produce', '₦2,500', '₦800'),
+    ('p1.png', 'Fresh Full Chicken', 'Johns Farmhouse', '₦7,000', '₦3,000', 'Meat'),
+    ('p2.png', 'Chicken Breast', 'Poultry Farm', '₦8,450', '₦2,000', 'Meat'),
+    ('p3.png', 'Fresh Tomatoes', 'Green Valley Farm', '₦4,500', '₦1,900', 'Vegetables'),
+    ('p4.png', 'Fresh Eggs', 'Local Farm', '₦6,500', '₦1,500', 'Dairy'),
+    ('p5.png', 'Fresh Vegetables', 'Harvest Market', '₦3,500', '₦1,000', 'Vegetables'),
+    ('p6.png', 'Fresh Peppers', 'Farm Produce', '₦2,500', '₦800', 'Spices'),
   ];
+
+  static bool _matchesQuery(
+    (String, String, String, String, String, String) product,
+    String query,
+  ) {
+    final normalized = query.trim().toLowerCase();
+    if (normalized.isEmpty) return true;
+
+    final searchable = [
+      product.$1,
+      product.$2,
+      product.$3,
+      product.$6,
+    ].join(' ').toLowerCase();
+
+    if (searchable.contains(normalized)) return true;
+
+    final aliases = <String, List<String>>{
+      'meat': ['chicken', 'poultry'],
+      'dairy': ['eggs', 'egg', 'milk'],
+      'vegetables': ['tomatoes', 'spinach', 'vegetable'],
+      'fruits': ['fruit', 'apple', 'grape'],
+      'seafoods': ['fish', 'seafood', 'catfish'],
+      'spices': ['pepper', 'spice'],
+      'roots and tubers': ['tuber', 'yam', 'potato'],
+      'flours & grains': ['grain', 'rice', 'flour', 'pasta'],
+      'oils': ['oil'],
+    };
+
+    final words = aliases[normalized] ?? const <String>[];
+    return words.any((word) => searchable.contains(word));
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -132,13 +171,7 @@ class SearchResultScreen extends StatelessWidget {
               const SizedBox(height: 18),
               Builder(
                 builder: (context) {
-                  final matches = products
-                      .where(
-                        (product) =>
-                            product.$2.toLowerCase().contains(query.toLowerCase()) ||
-                            product.$3.toLowerCase().contains(query.toLowerCase()),
-                      )
-                      .toList();
+                  final matches = products.where((product) => _matchesQuery(product, query)).toList();
                   if (matches.isEmpty) {
                     return Padding(
                       padding: const EdgeInsets.only(top: 48),
@@ -151,14 +184,19 @@ class SearchResultScreen extends StatelessWidget {
                       ),
                     );
                   }
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 22,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.6,
-                    children: [for (final p in matches) _ProductCard(p)],
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      final columns = constraints.maxWidth < 330 ? 1 : 2;
+                      return GridView.count(
+                        crossAxisCount: columns,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        mainAxisSpacing: 22,
+                        crossAxisSpacing: 20,
+                        childAspectRatio: columns == 1 ? 1.1 : 0.6,
+                        children: [for (final p in matches) _ProductCard(p)],
+                      );
+                    },
                   );
                 },
               ),
@@ -169,34 +207,55 @@ class SearchResultScreen extends StatelessWidget {
 }
 
 class _ProductCard extends StatelessWidget {
-  final (String, String, String, String, String) p;
+  final (String, String, String, String, String, String) p;
   const _ProductCard(this.p);
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset('assets/images/oyuki_assets/${p.$1}', height: 110, fit: BoxFit.contain),
-          const SizedBox(height: 8),
-          Text(p.$2, style: poppins(size: 14, weight: FontWeight.w600, color: AppColors.text)),
-          const SizedBox(height: 2),
-          Text(p.$3, style: poppins(size: 12, color: AppColors.grey)),
-          const SizedBox(height: 6),
-          Row(
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.pushNamed(context, '/product'),
+        child: RepaintBoundary(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(p.$4, style: poppins(size: 15, weight: FontWeight.w700, color: AppColors.text)),
-              const SizedBox(width: 6),
-              Text(p.$5,
-                  style: poppins(size: 12, color: AppColors.grey).copyWith(
-                      decoration: TextDecoration.lineThrough, decorationColor: AppColors.grey)),
-              const Spacer(),
-              Container(
-                width: 26,
-                height: 26,
-                decoration: const BoxDecoration(color: AppColors.green, shape: BoxShape.circle),
-                child: const Icon(Icons.add, color: Colors.white, size: 18),
+              Image.asset(
+                'assets/images/oyuki_assets/${p.$1}',
+                height: 110,
+                fit: BoxFit.contain,
+                cacheWidth: 360,
+              ),
+              const SizedBox(height: 8),
+              Text(p.$2, style: poppins(size: 14, weight: FontWeight.w600, color: AppColors.text)),
+              const SizedBox(height: 2),
+              Text(p.$3, style: poppins(size: 12, color: AppColors.grey)),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  Expanded(
+                    child: FittedBox(
+                      alignment: Alignment.centerLeft,
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        children: [
+                          Text(p.$4, style: poppins(size: 15, weight: FontWeight.w700, color: AppColors.text)),
+                          const SizedBox(width: 6),
+                          Text(p.$5,
+                              style: poppins(size: 12, color: AppColors.grey).copyWith(
+                                  decoration: TextDecoration.lineThrough, decorationColor: AppColors.grey)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Container(
+                    width: 26,
+                    height: 26,
+                    decoration: const BoxDecoration(color: AppColors.green, shape: BoxShape.circle),
+                    child: const Icon(Icons.add, color: Colors.white, size: 18),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       );
 }

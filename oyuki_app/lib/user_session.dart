@@ -7,8 +7,6 @@ class UserSession {
   static String accessToken = '';
   static String refreshToken = '';
   static int? userId;
-  static String localUsername = '';
-  static String localPassword = '';
 
   static void update({
     String? name,
@@ -44,19 +42,5 @@ class UserSession {
     accessToken = '';
     refreshToken = '';
     userId = null;
-  }
-
-  static void saveLocalCredentials({
-    required String username,
-    required String password,
-  }) {
-    localUsername = username.trim();
-    localPassword = password;
-  }
-
-  static bool matchesLocalCredentials(String username, String password) {
-    if (localUsername.isEmpty) return true;
-    return localUsername.toLowerCase() == username.trim().toLowerCase() &&
-        localPassword == password;
   }
 }

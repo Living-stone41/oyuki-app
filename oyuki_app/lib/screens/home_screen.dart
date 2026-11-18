@@ -142,18 +142,30 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
               const _BannerCarousel(),
               const SizedBox(height: 24),
-              GridView.count(
-                crossAxisCount: 4,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 18,
-                crossAxisSpacing: 6,
-                childAspectRatio: 0.72,
-                children: [
-                  for (final c in cats)
-                    CategoryTile(bg: c.$1, icon: c.$2, iconColor: c.$3, label: c.$4,
-                        onTap: () => Navigator.pushNamed(context, '/category')),
-                ],
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth < 360 ? 4 : 4;
+                  return GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 18,
+                    crossAxisSpacing: 6,
+                    childAspectRatio: constraints.maxWidth < 360 ? 0.68 : 0.72,
+                    children: [
+                      for (final c in cats)
+                        CategoryTile(bg: c.$1, icon: c.$2, iconColor: c.$3, label: c.$4,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SearchResultScreen(query: c.$4),
+                                ),
+                              );
+                            }),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 20),
               SectionHeader(title: 'Popular Farm Goods', onSeeAll: () => Navigator.pushNamed(context, '/category')),

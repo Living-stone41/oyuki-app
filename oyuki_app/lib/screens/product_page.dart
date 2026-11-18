@@ -32,7 +32,7 @@ class _ProductPageState extends State<ProductPage> {
                           children: [
                             Text('Fresh tomatoes', style: poppins(size: 22, weight: FontWeight.w700, color: AppColors.text)),
                             const SizedBox(height: 6),
-                            Text('Lorem ipsum dolor sit amet consectetur. Congue tempor varius ante nascetur etiam odio.',
+                            Text('Fresh, carefully selected tomatoes sourced directly from trusted local farms.',
                                 style: poppins(size: 13, color: AppColors.grey)),
                             const SizedBox(height: 12),
                             RichText(

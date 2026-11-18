@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/seed.dart';
 import '../models/models.dart';
+import '../services/vendor_api.dart';
 import '../utils/format.dart';
 
 /// Single source of truth for the vendor app. Data is persisted locally with
@@ -18,7 +18,16 @@ class AppState extends ChangeNotifier {
   final SharedPreferences _prefs;
 
   bool loggedIn = false;
-  late StoreProfile profile;
+  StoreProfile profile = const StoreProfile(
+    ownerName: '',
+    email: '',
+    name: '',
+    description: '',
+    phone: '',
+    openMinutes: 8 * 60,
+    closeMinutes: 22 * 60,
+    address: '',
+  );
   List<Order> orders = [];
   List<MenuItem> menu = [];
   List<AppNotification> notifications = [];
@@ -32,49 +41,48 @@ class AppState extends ChangeNotifier {
   static Future<AppState> load() async {
     final prefs = await SharedPreferences.getInstance();
     final s = AppState._(prefs);
-    final now = DateTime.now();
 
     try {
       final p = prefs.getString(_kProfile);
       s.profile = p == null
-          ? seedProfile()
+          ? const StoreProfile(ownerName: '', email: '', name: '', description: '', phone: '', openMinutes: 480, closeMinutes: 1320, address: '')
           : StoreProfile.fromJson(jsonDecode(p) as Map<String, dynamic>);
     } catch (_) {
-      s.profile = seedProfile();
+      s.profile = const StoreProfile(ownerName: '', email: '', name: '', description: '', phone: '', openMinutes: 480, closeMinutes: 1320, address: '');
     }
 
     try {
       final o = prefs.getString(_kOrders);
       s.orders = o == null
-          ? seedOrders(now)
+          ? []
           : (jsonDecode(o) as List)
               .map((e) => Order.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList();
     } catch (_) {
-      s.orders = seedOrders(now);
+      s.orders = [];
     }
 
     try {
       final m = prefs.getString(_kMenu);
       s.menu = m == null
-          ? seedMenu()
+          ? []
           : (jsonDecode(m) as List)
               .map((e) => MenuItem.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList();
     } catch (_) {
-      s.menu = seedMenu();
+      s.menu = [];
     }
 
     try {
       final n = prefs.getString(_kNotifs);
       s.notifications = n == null
-          ? seedNotifications(now)
+          ? []
           : (jsonDecode(n) as List)
               .map((e) =>
                   AppNotification.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList();
     } catch (_) {
-      s.notifications = seedNotifications(now);
+      s.notifications = [];
     }
 
     s.loggedIn = prefs.getString(_kSession) != null;
@@ -105,7 +113,7 @@ class AppState extends ChangeNotifier {
   }
 
   // ------------------------------------------------------------------- auth
-  Future<void> login(String email) async {
+  Future<void> login(String email, {bool remote = false}) async {
     loggedIn = true;
     final trimmed = email.trim();
     final displayName = trimmed.contains('@') ? trimmed.split('@').first : trimmed;
@@ -121,6 +129,7 @@ class AppState extends ChangeNotifier {
   Future<void> logout() async {
     loggedIn = false;
     await _prefs.remove(_kSession);
+    await VendorApi.clearSession();
     notifyListeners();
   }
 
@@ -155,43 +164,6 @@ class AppState extends ChangeNotifier {
       _setStatus(number, OrderStatus.rejected, 'rejected');
   Future<void> completeOrder(int number) =>
       _setStatus(number, OrderStatus.completed, 'marked as completed');
-
-  /// Demo helper: pretends a customer just placed an order.
-  Future<void> simulateIncomingOrder() async {
-    final now = DateTime.now();
-    final number =
-        orders.isEmpty ? 1000 : orders.map((o) => o.number).reduce((a, b) => a > b ? a : b) + 1;
-    final pool = menu.isEmpty
-        ? [const OrderItem(name: '5kg Spinach', unitPrice: 3550, quantity: 1)]
-        : menu
-            .map((m) => OrderItem(name: m.name, unitPrice: m.price, quantity: 1))
-            .toList();
-    final first = pool[now.millisecond % pool.length];
-    final second = pool[(now.millisecond ~/ 7) % pool.length];
-    final items = <OrderItem>[
-      OrderItem(
-          name: first.name, unitPrice: first.unitPrice, quantity: 1 + now.second % 3),
-      if (second.name != first.name)
-        OrderItem(name: second.name, unitPrice: second.unitPrice, quantity: 1),
-    ];
-    orders = [
-      Order(
-        number: number,
-        customerName: 'Adeola Opeyemi',
-        address: 'No 15 Dosumu Street Orile Agege, Lagos',
-        phone: '+234 914 567 02',
-        items: items,
-        status: OrderStatus.pending,
-        createdAt: now,
-      ),
-      ...orders,
-    ];
-    _pushNotification(NotificationKind.order, 'New Order Received',
-        'Order #$number is waiting for your response');
-    notifyListeners();
-    await _saveOrders();
-    await _saveNotifs();
-  }
 
   // ---------------------------------------------------------- notifications
   void _pushNotification(NotificationKind kind, String title, String body) {

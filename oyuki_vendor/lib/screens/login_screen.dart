@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/vendor_api.dart';
 import '../state/app_scope.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
@@ -47,11 +48,39 @@ class _LoginScreenState extends State<LoginScreen> {
     FocusScope.of(context).unfocus();
     setState(() => _busy = true);
     try {
+      final result = await VendorApi.post('/auth/login/', body: {
+        'identifier': _email.text.trim(),
+        'password': _password.text,
+      });
+
+      final user = result['user'];
+      if (user is Map && user['role'] != 'vendor') {
+        throw VendorApiException('This account is not registered as a vendor.');
+      }
+
+      final access = result['access']?.toString() ?? '';
+      final refresh = result['refresh']?.toString() ?? '';
+      if (access.isEmpty) {
+        throw VendorApiException('The server did not return an access token.');
+      }
+
+      await VendorApi.saveSession(access, refresh);
+      if (!mounted) return;
       final state = AppScope.read(context);
-      await state.login(_email.text.trim());
+      await state.login(_email.text.trim(), remote: true);
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const Shell()),
+      );
+    } on VendorApiException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.message)),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to connect to the backend.')),
       );
     } finally {
       if (mounted) setState(() => _busy = false);

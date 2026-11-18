@@ -7,6 +7,8 @@ import 'package:oyuki_vendor/theme.dart' as vendor_theme;
 import '../theme.dart';
 import '../user_session.dart';
 import '../widgets/common.dart';
+import '../services/api_client.dart';
+import '../services/auth_service.dart';
 
 class _AuthScaffold extends StatelessWidget {
   final List<Widget> children;
@@ -188,21 +190,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _showError('Passwords do not match.');
       return;
     }
-    UserSession.saveLocalCredentials(
-      username: _emailController.text,
-      password: _passwordController.text,
-    );
-    UserSession.update(
-      name: _nameController.text,
-      accountEmail: _emailController.text,
-    );
-    if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const OtpSignUpScreen(debugOtp: '123456'),
-      ),
-    );
+
+    try {
+      await AuthService.register(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+    } on ApiException catch (error) {
+      _showError(error.message);
+    } catch (error) {
+      _showError(ApiClient.connectionError(error));
+    }
   }
 
   void _showError(String message) {
@@ -237,23 +238,19 @@ class _LoginScreenState extends State<LoginScreen> {
       _showError('Enter your username and password.');
       return;
     }
-    if (!UserSession.matchesLocalCredentials(
-        _usernameController.text, _passwordController.text)) {
-      _showError('Incorrect username or password.');
-      return;
+
+    try {
+      await AuthService.login(
+        identifier: _usernameController.text,
+        password: _passwordController.text,
+      );
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+    } on ApiException catch (error) {
+      _showError(error.message);
+    } catch (error) {
+      _showError(ApiClient.connectionError(error));
     }
-    final username = _usernameController.text.trim();
-    final isEmail = username.contains('@');
-    UserSession.saveLocalCredentials(
-      username: username,
-      password: _passwordController.text,
-    );
-    UserSession.update(
-      name: isEmail ? username.split('@').first : username,
-      accountEmail: isEmail ? username : null,
-    );
-    if (!mounted) return;
-    Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
   }
 
   void _showError(String message) {
@@ -372,12 +369,10 @@ class ResetPasswordScreen extends StatelessWidget {
 class OtpSignUpScreen extends StatefulWidget {
   final bool filled;
   final int? userId;
-  final String? debugOtp;
   const OtpSignUpScreen({
     super.key,
     this.filled = false,
     this.userId,
-    this.debugOtp,
   });
 
   @override
@@ -390,7 +385,7 @@ class _OtpSignUpScreenState extends State<OtpSignUpScreen> {
   @override
   void initState() {
     super.initState();
-    _otpController = TextEditingController(text: widget.debugOtp ?? '');
+    _otpController = TextEditingController(text: '');
   }
 
   @override
@@ -400,12 +395,23 @@ class _OtpSignUpScreenState extends State<OtpSignUpScreen> {
   }
 
   Future<void> _verify() async {
-    if (_otpController.text.trim() != '123456') {
+    if (_otpController.text.trim().isEmpty) {
       _showError('Enter the 6-digit verification code.');
       return;
     }
-    if (!mounted) return;
-    Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+
+    try {
+      await ApiClient.post('/auth/verify/', body: {
+        'email': UserSession.email,
+        'otp': _otpController.text.trim(),
+      }, authenticated: true);
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+    } on ApiException catch (error) {
+      _showError(error.message);
+    } catch (error) {
+      _showError(ApiClient.connectionError(error));
+    }
   }
 
   void _showError(String message) {
@@ -438,12 +444,6 @@ class _OtpSignUpScreenState extends State<OtpSignUpScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          if (widget.debugOtp != null)
-            Text(
-              'Development OTP: ${widget.debugOtp}',
-              style: const TextStyle(color: AppColors.grey),
-            ),
-          const SizedBox(height: 12),
           TextField(
             controller: _otpController,
             keyboardType: TextInputType.number,

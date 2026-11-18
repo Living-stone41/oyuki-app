@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
+import 'search_screens.dart';
 
 class Category {
   final String name;
@@ -62,31 +63,55 @@ class CategoryScreen extends StatelessWidget {
             ),
             const SizedBox(height: 28),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
-                itemCount: categories.length,
-                itemBuilder: (context, i) {
-                  final c = categories[i];
-                  return Column(
-                    children: [
-                      Container(
-                        height: 62,
-                        width: 62,
-                        decoration: BoxDecoration(
-                            color: c.bg, borderRadius: BorderRadius.circular(10)),
-                        child: Icon(c.icon, color: const Color(0xFF5A4632), size: 30),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(c.name,
-                          textAlign: TextAlign.center,
-                          style:
-                              const TextStyle(fontSize: 12, color: AppColors.text)),
-                    ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth < 360
+                      ? 3
+                      : constraints.maxWidth < 600
+                          ? 4
+                          : 5;
+                  return GridView.builder(
+                    padding: EdgeInsets.zero,
+                    addAutomaticKeepAlives: false,
+                    addRepaintBoundaries: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemCount: categories.length,
+                    itemBuilder: (context, i) {
+                      final c = categories[i];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => SearchResultScreen(query: c.name),
+                            ),
+                          );
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 62,
+                              width: 62,
+                              decoration: BoxDecoration(
+                                  color: c.bg, borderRadius: BorderRadius.circular(10)),
+                              child: Icon(c.icon,
+                                  color: const Color(0xFF5A4632), size: 30),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(c.name,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    fontSize: 12, color: AppColors.text)),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 },
               ),
